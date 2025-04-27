@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PagesInNation</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="fonts.js"></script>
+  </head>
+  <body>
+    <header>
+      <section id="fancyToolbar">
+        <select id="selectionFontSelect">
+          <option value="">Font</option>
+        </select>
+
+        <input
+          type="number"
+          id="selectionFontSize"
+          placeholder="Size (px)"
+          min="8"
+          max="200"
+        />
+
+        <input type="color" id="selectionTextColor" title="Text Color" />
+        <input type="color" id="selectionBgColor" title="Background Color" />
+
+        <button id="boldSelectionBtn">Bold</button>
+        <button id="italicSelectionBtn">Italic</button>
+        <button id="resetSelectionBtn">Reset</button>
+      </section>
+
+      <div id="controls">
+        <button id="addPageBtn">➕ Add Page</button>
+        <button id="prevPageBtn">⬅️ Prev</button>
+        <button id="nextPageBtn">Next ➡️</button>
+
+        <select id="pageSelectDropdown">
+          <option value="">Select Page</option>
+        </select>
+
+        <input type="number" id="pageNumberInput" placeholder="Go to Page" />
+        <button id="goToPageBtn">Go</button>
+      </div>
+    </header>
+
+    <section id="stylingControls">
+      <select id="fontSelect">
+        <option value="">Choose Font</option>
+      </select>
+      <input type="number" id="fontSizeInput" placeholder="Font Size (px)" />
+      <input type="color" id="textColorInput" title="Text Color" />
+      <input type="color" id="bgColorInput" title="Background Color" />
+    </section>
+
+    <main id="pageContainer">
+      <!-- Dynamic page content will be injected here -->
+    </main>
+    <script src="textTools.js"></script>
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

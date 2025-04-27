@@ -1,0 +1,164 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header Controls */
+header {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Styling Controls */
+#stylingControls {
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Page Container */
+#pageContainer {
+  background-color: white;
+  width: 90%;
+  max-width: 800px;
+  min-height: 500px;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Make page content editable inside */
+.page-content {
+  width: 100%;
+  min-height: 400px;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Style for selected text */
+.page-content ::selection {
+  background-color: rgba(0, 123, 255, 0.2);
+}
+
+/* Style for styled spans */
+.page-content span {
+  display: inline;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
+/* Buttons and Inputs */
+button,
+select,
+input[type="number"],
+input[type="color"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 14px !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 36px;
+  line-height: 1;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+select,
+input[type="number"],
+input[type="color"] {
+  min-width: 100px;
+}
+
+/* #textTools {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  #textTools button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #ffffff;
+    cursor: pointer;
+  }
+  
+  #textTools button:hover {
+    background-color: #f0f0f0;
+  } */
+
+#fancyToolbar {
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#fancyToolbar select,
+#fancyToolbar input[type="number"],
+#fancyToolbar input[type="color"],
+#fancyToolbar button {
+  font-size: 14px !important;
+  height: 36px;
+  line-height: 1;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#fancyToolbar button:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+#fancyToolbar button.active {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}

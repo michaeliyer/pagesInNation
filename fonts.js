@@ -59,6 +59,7 @@ const fonts = [
   "Rubik Beastly",
   "Protest Guerrilla",
   "Combo",
+  "Tiny5",
 ];
 
 // Dynamically load Google Fonts

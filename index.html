@@ -46,14 +46,18 @@
           <input type="number" id="pageNumberInput" placeholder="Go to Page" />
           <button id="goToPageBtn">Go</button>
 
-          <button id="importPagesBtn">📥 Import Pages</button>
-          <button id="exportPagesBtn">📤 Export Pages</button>
-          <input
-            type="file"
-            id="importFileInput"
-            accept=".json"
-            style="display: none"
-          />
+          <div class="import-export-options">
+            <button id="exportCurrentPageBtn">📤 Export Current Page</button>
+            <button id="exportAllPagesBtn">📤 Export All Pages</button>
+            <button id="importPageBtn">📥 Import Page</button>
+            <button id="importAllPagesBtn">📥 Import All Pages</button>
+            <input
+              type="file"
+              id="importFileInput"
+              accept=".json"
+              style="display: none"
+            />
+          </div>
         </div>
       </section>
     </header>

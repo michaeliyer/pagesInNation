@@ -22,8 +22,10 @@ const bgColorInput = document.getElementById("bgColorInput");
 const pageContainer = document.getElementById("pageContainer");
 
 // Import/Export functionality
-const importPagesBtn = document.getElementById("importPagesBtn");
-const exportPagesBtn = document.getElementById("exportPagesBtn");
+const exportCurrentPageBtn = document.getElementById("exportCurrentPageBtn");
+const exportAllPagesBtn = document.getElementById("exportAllPagesBtn");
+const importPageBtn = document.getElementById("importPageBtn");
+const importAllPagesBtn = document.getElementById("importAllPagesBtn");
 const importFileInput = document.getElementById("importFileInput");
 
 // Initialize
@@ -219,8 +221,34 @@ function populateFontDropdown() {
   });
 }
 
-// Export pages to JSON file
-exportPagesBtn.addEventListener("click", () => {
+// Export current page
+exportCurrentPageBtn.addEventListener("click", () => {
+  if (!pages.length) return;
+
+  const pageData = {
+    page: pages[currentPageIndex],
+    pageIndex: currentPageIndex,
+    timestamp: new Date().toISOString(),
+  };
+
+  const blob = new Blob([JSON.stringify(pageData, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `pageInNation_export_page${currentPageIndex + 1}_${
+    new Date().toISOString().split("T")[0]
+  }.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// Export all pages
+exportAllPagesBtn.addEventListener("click", () => {
   const pagesData = {
     pages: pages,
     currentPageIndex: currentPageIndex,
@@ -234,7 +262,7 @@ exportPagesBtn.addEventListener("click", () => {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = `pagesInNation_export_${
+  a.download = `pagesInNation_export_all_${
     new Date().toISOString().split("T")[0]
   }.json`;
   document.body.appendChild(a);
@@ -243,9 +271,16 @@ exportPagesBtn.addEventListener("click", () => {
   URL.revokeObjectURL(url);
 });
 
-// Import pages from JSON file
-importPagesBtn.addEventListener("click", () => {
+// Import single page
+importPageBtn.addEventListener("click", () => {
   importFileInput.click();
+  importFileInput.dataset.importType = "single";
+});
+
+// Import all pages
+importAllPagesBtn.addEventListener("click", () => {
+  importFileInput.click();
+  importFileInput.dataset.importType = "all";
 });
 
 importFileInput.addEventListener("change", (event) => {
@@ -256,28 +291,42 @@ importFileInput.addEventListener("change", (event) => {
   reader.onload = (e) => {
     try {
       const importedData = JSON.parse(e.target.result);
+      const importType = event.target.dataset.importType;
 
-      if (!importedData.pages || !Array.isArray(importedData.pages)) {
-        throw new Error("Invalid file format");
-      }
+      if (importType === "all") {
+        if (!importedData.pages || !Array.isArray(importedData.pages)) {
+          throw new Error("Invalid file format for all pages");
+        }
 
-      // Ask for confirmation before importing
-      if (confirm("Importing will replace all current pages. Continue?")) {
-        pages = importedData.pages;
-        currentPageIndex = importedData.currentPageIndex || 0;
+        if (confirm("Importing will replace all current pages. Continue?")) {
+          pages = importedData.pages;
+          currentPageIndex = importedData.currentPageIndex || 0;
+          saveAllPages(pages);
+          updatePageSelectDropdown();
+          renderPage();
+          alert("All pages imported successfully!");
+        }
+      } else {
+        // Single page import
+        if (!importedData.page) {
+          throw new Error("Invalid file format for single page");
+        }
 
-        // Save to localStorage
-        saveAllPages(pages);
-
-        // Update UI
-        updatePageSelectDropdown();
-        renderPage();
-
-        alert("Pages imported successfully!");
+        if (
+          confirm("Import this page? It will be added after the current page.")
+        ) {
+          const newPageIndex = currentPageIndex + 1;
+          pages.splice(newPageIndex, 0, importedData.page);
+          currentPageIndex = newPageIndex;
+          saveAllPages(pages);
+          updatePageSelectDropdown();
+          renderPage();
+          alert("Page imported successfully!");
+        }
       }
     } catch (error) {
-      console.error("Error importing pages:", error);
-      alert("Error importing pages: " + error.message);
+      console.error("Error importing:", error);
+      alert("Error importing: " + error.message);
     }
   };
   reader.readAsText(file);

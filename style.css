@@ -48,7 +48,7 @@ header {
   background-color: white;
   width: 90%;
   max-width: 800px;
-  min-height: 500px;
+  min-height: 1000px;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -161,4 +161,42 @@ input[type="color"] {
 #fancyToolbar button.active {
   background-color: #e9ecef;
   border-color: #adb5bd;
+}
+
+/* Toolbar Toggle Button */
+.toolbar-toggle {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.toolbar-toggle:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+/* Hidden class for toolbars */
+#fancyToolbar.hidden,
+#stylingControls.hidden {
+  display: none;
+}
+
+/* Delete Page Button */
+#deletePageBtn {
+  background-color: #ffebee;
+  border-color: #ffcdd2;
+  color: #c62828;
+}
+
+#deletePageBtn:hover {
+  background-color: #ffcdd2;
+  color: #b71c1c;
 }

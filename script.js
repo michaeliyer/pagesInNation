@@ -4,12 +4,16 @@ let currentPageIndex = 0;
 
 // DOM Elements
 const addPageBtn = document.getElementById("addPageBtn");
+const deletePageBtn = document.getElementById("deletePageBtn");
 const prevPageBtn = document.getElementById("prevPageBtn");
 const nextPageBtn = document.getElementById("nextPageBtn");
 const pageSelectDropdown = document.getElementById("pageSelectDropdown");
 const pageNumberInput = document.getElementById("pageNumberInput");
 const goToPageBtn = document.getElementById("goToPageBtn");
-
+const toggleToolbarBtn = document.getElementById("toggleToolbarBtn");
+const fancyToolbar = document.getElementById("fancyToolbar");
+const stylingControls = document.getElementById("stylingControls");
+// const controls = document.getElementById("controls");
 const fontSelect = document.getElementById("fontSelect");
 const fontSizeInput = document.getElementById("fontSizeInput");
 const textColorInput = document.getElementById("textColorInput");
@@ -20,6 +24,9 @@ const pageContainer = document.getElementById("pageContainer");
 // Initialize
 window.addEventListener("DOMContentLoaded", () => {
   populateFontDropdown();
+  // Hide toolbars by default
+  fancyToolbar.classList.add("hidden");
+  stylingControls.classList.add("hidden");
   // Important: Don't create a blank page here!
   // Database will load saved pages or create a blank if needed
 });
@@ -116,6 +123,26 @@ addPageBtn.addEventListener("click", () => {
   createNewPage();
 });
 
+deletePageBtn.addEventListener("click", () => {
+  if (pages.length > 1) {
+    if (
+      confirm(
+        "Are you sure you want to delete this page? This action cannot be undone."
+      )
+    ) {
+      pages.splice(currentPageIndex, 1);
+      if (currentPageIndex >= pages.length) {
+        currentPageIndex = pages.length - 1;
+      }
+      renderPage();
+      updatePageSelectDropdown();
+      saveAllPages(pages);
+    }
+  } else {
+    alert("Cannot delete the last page");
+  }
+});
+
 prevPageBtn.addEventListener("click", () => {
   if (currentPageIndex > 0) {
     currentPageIndex--;
@@ -145,6 +172,21 @@ goToPageBtn.addEventListener("click", () => {
     pageSelectDropdown.value = currentPageIndex;
   }
 });
+
+// Toggle Toolbar
+toggleToolbarBtn.addEventListener("click", () => {
+  const isHidden = fancyToolbar.classList.contains("hidden");
+  fancyToolbar.classList.toggle("hidden");
+  stylingControls.classList.toggle("hidden");
+  toggleToolbarBtn.textContent = isHidden ? "🔧 Hide Tools" : "🔧 Show Tools";
+});
+
+// toggleToolbarBtn.addEventListener("click", () => {
+//   const isHidden = controls.classList.contains("hidden");
+//   controls.classList.toggle("hidden");
+//   stylingControls.classList.toggle("hidden");
+//   toggleToolbarBtn.textContent = isHidden ? "🔧 Hide Tools" : "🔧 Show Tools";
+// });
 
 // Styling controls
 fontSelect.addEventListener("change", () => {

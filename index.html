@@ -3,13 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> 📘📗📕📓📙📒 PagesInNation 📘📗📕📓📙📒 </title>
+    <title>📘📗📕📓📙📒 PagesInNation 📘📗📕📓📙📒</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script src="fonts.js"></script>
   </head>
   <body>
     <header>
-      <section id="fancyToolbar">
+      <button id="toggleToolbarBtn" class="toolbar-toggle">
+        🔧 Show Tools
+      </button>
+
+      <section id="fancyToolbar" class="hidden">
         <select id="selectionFontSelect">
           <option value="">Font</option>
         </select>
@@ -30,8 +34,9 @@
         <button id="resetSelectionBtn">Reset</button>
       </section>
 
-      <div id="controls">
+      <div id="controls" class="hidden">
         <button id="addPageBtn">➕ Add Page</button>
+        <button id="deletePageBtn">🗑️ Delete Page</button>
         <button id="prevPageBtn">⬅️ Prev</button>
         <button id="nextPageBtn">Next ➡️</button>
 
@@ -44,7 +49,7 @@
       </div>
     </header>
 
-    <section id="stylingControls">
+    <section id="stylingControls" class="hidden">
       <select id="fontSelect">
         <option value="">Choose Font</option>
       </select>

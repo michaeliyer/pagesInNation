@@ -78,28 +78,68 @@ function renderPage() {
   contentEditableDiv.style.lineHeight = "1.6";
   pageContainer.style.backgroundColor = page.styles.backgroundColor;
 
-  // Update on typing or content change
-  contentEditableDiv.addEventListener("input", () => {
+  // Handle paste events
+  contentEditableDiv.addEventListener("paste", (e) => {
+    e.preventDefault();
+
+    // Get the pasted content
+    const pastedContent = e.clipboardData.getData("text/plain");
+
+    // Get the current selection
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+
+    // Delete the selected content if any
+    range.deleteContents();
+
+    // Check if the pasted content is a URL
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = pastedContent.split(urlRegex);
+
+    // Process each part
+    parts.forEach((part) => {
+      if (urlRegex.test(part)) {
+        // It's a URL, create a link
+        const link = document.createElement("a");
+        link.href = part;
+        link.textContent = part;
+        link.target = "_blank"; // Open in new tab
+        link.style.color = "#0066cc";
+        link.style.textDecoration = "underline";
+        link.style.cursor = "pointer";
+        range.insertNode(link);
+      } else {
+        // It's regular text
+        const textNode = document.createTextNode(part);
+        range.insertNode(textNode);
+      }
+    });
+
+    // Update the selection to be after the pasted content
+    range.setStartAfter(range.endContainer);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    // Save the changes
     page.textContent = contentEditableDiv.innerHTML;
     saveAllPages(pages);
   });
 
-  // Handle paste events to preserve styles
-  contentEditableDiv.addEventListener("paste", (e) => {
-    e.preventDefault();
-    const text =
-      e.clipboardData.getData("text/html") ||
-      e.clipboardData.getData("text/plain");
-    const selection = window.getSelection();
-    if (selection.rangeCount) {
-      const range = selection.getRangeAt(0);
-      range.deleteContents();
-      const div = document.createElement("div");
-      div.innerHTML = text;
-      range.insertNode(div.firstChild || document.createTextNode(text));
-      page.textContent = contentEditableDiv.innerHTML;
-      saveAllPages(pages);
+  // Handle link clicks
+  contentEditableDiv.addEventListener("click", (e) => {
+    if (e.target.tagName === "A") {
+      e.preventDefault();
+      window.open(e.target.href, "_blank");
     }
+  });
+
+  // Update on typing or content change
+  contentEditableDiv.addEventListener("input", () => {
+    page.textContent = contentEditableDiv.innerHTML;
+    saveAllPages(pages);
   });
 
   pageContainer.appendChild(contentEditableDiv);
@@ -225,6 +265,16 @@ function populateFontDropdown() {
 exportCurrentPageBtn.addEventListener("click", () => {
   if (!pages.length) return;
 
+  const defaultName = `pageInNation_export_page${currentPageIndex + 1}_${
+    new Date().toISOString().split("T")[0]
+  }`;
+  const customName = prompt(
+    "Enter a name for the exported file (without extension):",
+    defaultName
+  );
+
+  if (customName === null) return; // User cancelled
+
   const pageData = {
     page: pages[currentPageIndex],
     pageIndex: currentPageIndex,
@@ -238,9 +288,7 @@ exportCurrentPageBtn.addEventListener("click", () => {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = `pageInNation_export_page${currentPageIndex + 1}_${
-    new Date().toISOString().split("T")[0]
-  }.json`;
+  a.download = `${customName}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -249,6 +297,16 @@ exportCurrentPageBtn.addEventListener("click", () => {
 
 // Export all pages
 exportAllPagesBtn.addEventListener("click", () => {
+  const defaultName = `pagesInNation_export_all_${
+    new Date().toISOString().split("T")[0]
+  }`;
+  const customName = prompt(
+    "Enter a name for the exported file (without extension):",
+    defaultName
+  );
+
+  if (customName === null) return; // User cancelled
+
   const pagesData = {
     pages: pages,
     currentPageIndex: currentPageIndex,
@@ -262,9 +320,7 @@ exportAllPagesBtn.addEventListener("click", () => {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = `pagesInNation_export_all_${
-    new Date().toISOString().split("T")[0]
-  }.json`;
+  a.download = `${customName}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

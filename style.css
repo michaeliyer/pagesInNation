@@ -173,9 +173,6 @@ input[type="color"] {
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 0.5rem;
-  display: block;
-  width: 100%;
-  text-align: center;
 }
 
 .toolbar-toggle:hover {
@@ -184,8 +181,7 @@ input[type="color"] {
 }
 
 /* Hidden class for toolbars */
-#fancyToolbar.hidden,
-#stylingControls.hidden {
+.hidden {
   display: none;
 }
 
@@ -193,10 +189,8 @@ input[type="color"] {
 #deletePageBtn {
   background-color: #ffebee;
   border-color: #ffcdd2;
-  color: #c62828;
 }
 
 #deletePageBtn:hover {
   background-color: #ffcdd2;
-  color: #b71c1c;
 }

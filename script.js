@@ -13,7 +13,7 @@ const goToPageBtn = document.getElementById("goToPageBtn");
 const toggleToolbarBtn = document.getElementById("toggleToolbarBtn");
 const fancyToolbar = document.getElementById("fancyToolbar");
 const stylingControls = document.getElementById("stylingControls");
-// const controls = document.getElementById("controls");
+
 const fontSelect = document.getElementById("fontSelect");
 const fontSizeInput = document.getElementById("fontSizeInput");
 const textColorInput = document.getElementById("textColorInput");
@@ -24,9 +24,6 @@ const pageContainer = document.getElementById("pageContainer");
 // Initialize
 window.addEventListener("DOMContentLoaded", () => {
   populateFontDropdown();
-  // Hide toolbars by default
-  fancyToolbar.classList.add("hidden");
-  stylingControls.classList.add("hidden");
   // Important: Don't create a blank page here!
   // Database will load saved pages or create a blank if needed
 });
@@ -180,13 +177,6 @@ toggleToolbarBtn.addEventListener("click", () => {
   stylingControls.classList.toggle("hidden");
   toggleToolbarBtn.textContent = isHidden ? "🔧 Hide Tools" : "🔧 Show Tools";
 });
-
-// toggleToolbarBtn.addEventListener("click", () => {
-//   const isHidden = controls.classList.contains("hidden");
-//   controls.classList.toggle("hidden");
-//   stylingControls.classList.toggle("hidden");
-//   toggleToolbarBtn.textContent = isHidden ? "🔧 Hide Tools" : "🔧 Show Tools";
-// });
 
 // Styling controls
 fontSelect.addEventListener("change", () => {

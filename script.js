@@ -21,6 +21,11 @@ const bgColorInput = document.getElementById("bgColorInput");
 
 const pageContainer = document.getElementById("pageContainer");
 
+// Import/Export functionality
+const importPagesBtn = document.getElementById("importPagesBtn");
+const exportPagesBtn = document.getElementById("exportPagesBtn");
+const importFileInput = document.getElementById("importFileInput");
+
 // Initialize
 window.addEventListener("DOMContentLoaded", () => {
   populateFontDropdown();
@@ -213,3 +218,70 @@ function populateFontDropdown() {
     fontSelect.appendChild(option);
   });
 }
+
+// Export pages to JSON file
+exportPagesBtn.addEventListener("click", () => {
+  const pagesData = {
+    pages: pages,
+    currentPageIndex: currentPageIndex,
+    timestamp: new Date().toISOString(),
+  };
+
+  const blob = new Blob([JSON.stringify(pagesData, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `pagesInNation_export_${
+    new Date().toISOString().split("T")[0]
+  }.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+// Import pages from JSON file
+importPagesBtn.addEventListener("click", () => {
+  importFileInput.click();
+});
+
+importFileInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const importedData = JSON.parse(e.target.result);
+
+      if (!importedData.pages || !Array.isArray(importedData.pages)) {
+        throw new Error("Invalid file format");
+      }
+
+      // Ask for confirmation before importing
+      if (confirm("Importing will replace all current pages. Continue?")) {
+        pages = importedData.pages;
+        currentPageIndex = importedData.currentPageIndex || 0;
+
+        // Save to localStorage
+        saveAllPages(pages);
+
+        // Update UI
+        updatePageSelectDropdown();
+        renderPage();
+
+        alert("Pages imported successfully!");
+      }
+    } catch (error) {
+      console.error("Error importing pages:", error);
+      alert("Error importing pages: " + error.message);
+    }
+  };
+  reader.readAsText(file);
+
+  // Reset the file input
+  event.target.value = "";
+});

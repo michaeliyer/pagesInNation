@@ -157,9 +157,9 @@ function styleSelection(styleCallback) {
   if (!savedRange) return;
 
   const span = document.createElement("span");
-  span.style.display = "inline"; // Always inline
+  span.style.display = "inline";
 
-  styleCallback(span); // Apply custom style
+  styleCallback(span);
 
   try {
     const contents = savedRange.extractContents();
@@ -167,11 +167,24 @@ function styleSelection(styleCallback) {
     savedRange.deleteContents();
     savedRange.insertNode(span);
 
+    // Save page content after styling
     const pageContent = document.querySelector(".page-content");
     if (pageContent) {
       pages[currentPageIndex].textContent = pageContent.innerHTML;
       saveAllPages(pages);
     }
+
+    // Immediately re-save selection
+    const newRange = document.createRange();
+    newRange.setStartAfter(span);
+    newRange.collapse(true);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+
+    // Update savedRange too
+    savedRange = newRange.cloneRange();
   } catch (error) {
     console.error("Error styling selection:", error);
   }
@@ -246,17 +259,56 @@ italicSelectionBtn.addEventListener("click", () => {
 resetSelectionBtn.addEventListener("click", () => {
   if (!savedRange) return;
 
-  const container = document.createElement("div");
-  container.appendChild(savedRange.cloneContents());
+  try {
+    // Create a temporary container to hold the content
+    const container = document.createElement("div");
+    const contents = savedRange.cloneContents();
+    container.appendChild(contents);
 
-  removeInlineStyles(container);
+    // Remove all inline styles from the content
+    const walker = document.createTreeWalker(
+      container,
+      NodeFilter.SHOW_ELEMENT,
+      null,
+      false
+    );
 
-  savedRange.deleteContents();
-  savedRange.insertNode(container.firstChild);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        // Remove all style attributes
+        node.removeAttribute("style");
+        node.removeAttribute("class");
 
-  const pageContent = document.querySelector(".page-content");
-  if (pageContent) {
-    pages[currentPageIndex].textContent = pageContent.innerHTML;
-    saveAllPages(pages);
+        // If it's a span, convert it to a text node
+        if (node.tagName === "SPAN") {
+          const textNode = document.createTextNode(node.textContent);
+          node.parentNode.replaceChild(textNode, node);
+        }
+      }
+    }
+
+    // Replace the selection with the cleaned content
+    savedRange.deleteContents();
+    savedRange.insertNode(container.firstChild);
+
+    // Save the changes
+    const pageContent = document.querySelector(".page-content");
+    if (pageContent) {
+      pages[currentPageIndex].textContent = pageContent.innerHTML;
+      saveAllPages(pages);
+    }
+
+    // Restore the selection
+    const newRange = document.createRange();
+    newRange.setStartAfter(container.firstChild);
+    newRange.collapse(true);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+    savedRange = newRange.cloneRange();
+  } catch (error) {
+    console.error("Error resetting styles:", error);
   }
 });

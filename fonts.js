@@ -60,6 +60,7 @@ const fonts = [
   "Protest Guerrilla",
   "Combo",
   "Tiny5",
+  "Fugaz One",
 ];
 
 // Dynamically load Google Fonts
